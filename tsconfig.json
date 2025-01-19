@@ -1,0 +1,39 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext", // ESNext,CommonJS
+    "strict": true,
+    "noImplicitAny": false,
+    "lib": ["DOM", "ESNext"],
+    "jsx": "preserve",
+    "moduleResolution": "Node",
+    "esModuleInterop": true, // ES 模块互操作,import React from 'react';react是module.exports导出的，因此需要设置该属性
+    "forceConsistentCasingInFileNames": true, //在文件名中强制使用一致的大小写
+    "skipLibCheck": true, // 跳过d.ts声明文件的类型检查。
+    "baseUrl": "./",
+    // "sourceMap": true, // 是否生成sourceMap
+    // "noEmitOnError": false,
+    // "declaration": true, // 生成.d.ts文件
+    // "declarationDir": "./types", //生成.d.ts文件的目录
+    "resolveJsonModule": true, // 解析json模块
+    "paths": {
+      "@/*": ["src/*"]
+    }
+    // "paths": {
+    //   "@/*": ["./src/*"] // 这样写的话，@/不会提示路径，得使用baseUrl:'./'+paths:{"@/*": ["src/*"]}这样才的话@/才会提示路径
+    // }
+  },
+  // 命令行执行ts-node的时候的配置
+  "ts-node": {
+    "compilerOptions": {
+      "module": "CommonJS"
+    }
+  },
+  "exclude": ["doc/**/*", "node_modules/**/*"], // 排除include里的文件
+  "include": [
+    "./**/*.ts",
+    "./**/*.js",
+    ".eslintrc.js",
+    "./rollup.config.ts" //https://rollupjs.org/guide/en/#--configplugin-plugin
+  ] // 仅仅匹配这些文件
+}

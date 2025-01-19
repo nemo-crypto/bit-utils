@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    .aaa {
+      background-color: red;
+      /* width: 720px;
+      height: 1280px; */
+
+      width: 1280px;
+      height: 720px;
+
+      /* width: 80px;
+      height: 100px; */
+
+      /* width: 600px;
+      height: 1000px; */
+    }
+  </style>
+</head>
+
+<body>
+  <div class="aaa"></div>
+  <script>
+    function computeBox({
+      width,
+      height,
+      maxWidth,
+      maxHeight,
+      minWidth,
+      minHeight,
+    }) {
+      // w = h / ratio, h = w * ratio
+      const ratio = height / width;
+      // eslint-disable-next-line
+      const _minWidth = minWidth ? minWidth : 0;
+      // eslint-disable-next-line
+      const _minHeight = minHeight ? minHeight : 0;
+      // eslint-disable-next-line
+      let _width = width;
+      // eslint-disable-next-line
+      let _height = height;
+
+      if (_width < _minWidth) {
+        _width = _minWidth;
+        _height = _minWidth * ratio;
+      }
+      if (_height < _minHeight) {
+        _width = _minHeight / ratio;
+        _height = _minHeight;
+      }
+
+      if (_width > maxWidth) {
+        _width = maxWidth;
+        _height = maxWidth * ratio;
+      }
+      if (_height > maxHeight) {
+        _width = maxHeight / ratio;
+        _height = maxHeight;
+      }
+
+      return {
+        width: _width,
+        height: _height,
+      };
+    }
+
+    const el = document.querySelector('.aaa')
+    const { width, height } = el.getBoundingClientRect()
+    const { clientWidth: maxWidth, clientHeight: maxHeight } = document.documentElement
+    const res = computeBox({ width, height, maxWidth, maxHeight, minWidth: maxWidth, minHeight: maxHeight })
+    console.log(res);
+    el.style.width = res.width + 'px'
+    el.style.height = res.height + 'px'
+  </script>
+</body>
+
+</html>

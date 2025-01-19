@@ -1,0 +1,1 @@
+const t=t=>{function e(t){return t<10?`0${t}`:t}const n=new Date(t);return{year:n.getFullYear(),month:e(n.getMonth()+1),day:e(n.getDate()),hour:e(n.getHours()),minutes:e(n.getMinutes()),seconds:e(n.getSeconds())}};export{t as formatDate};

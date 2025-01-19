@@ -1,0 +1,88 @@
+{
+  "name": "bi-utils",
+  "version": "0.0.01",
+  "description": "bitrue's utils",
+  "keywords": [
+    "billd",
+    "utils",
+    "javascript"
+  ],
+  "homepage": "",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "sideEffects": false,
+  "main": "./dist/index.cjs.js",
+  "module": "./dist/index.esm.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "./postinstall.js"
+  ],
+  "scripts": {
+    "build": "ts-node ./scripts/build.ts",
+    "build:rollup": "rimraf dist && rollup -c rollup.config.ts --configPlugin @rollup/plugin-typescript",
+    "changelog": "conventional-changelog -p eslint -i CHANGELOG.md -s",
+    "changelog:first": "conventional-changelog -p eslint -i CHANGELOG.md -s -r 0",
+    "cz": "cz",
+    "dev": "ts-node ./scripts/build.ts --watch",
+    "doc": "rimraf doc && typedoc --options ./typedoc.config.json",
+    "postinstall": "node ./postinstall.js",
+    "lint": "eslint --config ./.eslintrc.js . --ext .js,.jsx,.ts,.tsx",
+    "lint:fix": "eslint --config ./.eslintrc.js . --ext .js,.jsx,.ts,.tsx --fix",
+    "prepare": "husky install",
+    "prettier": "prettier --write .",
+    "release:local": "ts-node ./scripts/release.ts",
+    "release:online": "ts-node ./scripts/publish.ts"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "dependencies": {
+    "@babel/core": "^7.18.9",
+    "@babel/plugin-transform-runtime": "^7.16.8",
+    "@babel/preset-env": "^7.18.9",
+    "@babel/runtime-corejs3": "^7.18.9",
+    "@rollup/plugin-babel": "^5.3.0",
+    "@rollup/plugin-commonjs": "^22.0.1",
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^13.3.0",
+    "@rollup/plugin-typescript": "^8.3.4",
+    "esbuild": "^0.15.8",
+    "rollup": "^2.77.0",
+    "rollup-plugin-dts": "^4.2.2",
+    "rollup-plugin-esbuild": "^4.10.1",
+    "rollup-plugin-terser": "^7.0.2",
+    "rollup-plugin-typescript2": "^0.32.1"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^17.0.3",
+    "@commitlint/config-conventional": "^17.0.3",
+    "@types/fs-extra": "^9.0.13",
+    "@types/node": "^18.0.6",
+    "@typescript-eslint/eslint-plugin": "^5.30.6",
+    "@typescript-eslint/parser": "^5.30.6",
+    "chalk": "^4",
+    "commitizen": "^4.2.4",
+    "conventional-changelog-cli": "^2.2.2",
+    "cross-env": "^7.0.3",
+    "cz-conventional-changelog": "^3.3.0",
+    "eslint": "^8.19.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "fs-extra": "^10.1.0",
+    "husky": "^8.0.1",
+    "inquirer": "^8",
+    "lint-staged": "^13.0.3",
+    "prettier": "^2.7.1",
+    "rimraf": "^3.0.2",
+    "semver": "^7.3.7",
+    "ts-node": "^10.9.1",
+    "typedoc": "^0.23.8",
+    "typescript": "^4.7.4"
+  }
+}

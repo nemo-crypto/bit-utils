@@ -1,0 +1,1 @@
+class t{capacity;data=new Map;constructor(t){if(t<1)throw new Error("capacity必须大于1！");this.capacity=t}get(t){const e=this.data,a=e.get(t);return e.has(t)?(e.delete(t),e.set(t,a),a):null}put(t,e){const a=this.data;a.has(t)&&a.delete(t),a.set(t,e),a.size>this.capacity&&a.delete(a.keys().next().value)}}export{t as LRUCache};
