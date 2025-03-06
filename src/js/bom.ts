@@ -85,16 +85,3 @@ export const isIe = () => {
 export const isFirefox = () => {
   return navigator.userAgent.indexOf('Firefox') !== -1;
 };
-
-/**
- * @description 判断是否是支持webp
- * @return {*}
- */
-export const isSupportWebp = () => {
-  return (
-    document
-      .createElement('canvas')
-      .toDataURL('image/webp')
-      .indexOf('data:image/webp') === 0
-  );
-};
