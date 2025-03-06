@@ -68,14 +68,3 @@ export const getArrayDifference = (a: any[], b: any[]) => {
   });
 };
 
-/**
- * @description 获取数组并集（不修改原数组）
- * @example
- * a[1,2,3],b[3,4,5],a和b的并集:getArrayUnion(a,b) ===> [1,2,3,4,5]
- * @param {any} a
- * @param {any} b
- * @return {*}
- */
-export const getArrayUnion = (a: any[], b: any[]) => {
-  return [...new Set([...a, ...b])];
-};
