@@ -62,7 +62,7 @@ pnpm run release:local
 
 1. 根据用户选择的版本，更新 package.json 的 version
 2. 开始构建
-3. 对比当前版本与上个版本的差异，生成 changelog
+3. 对比当前版本与上个版本的差异，生成 changelog日志
 4. 提交暂存区到本地仓库：git commit -m 'chore(release): v 当前版本'
 5. 生成当前版本 tag：git tag v 当前版本
 
