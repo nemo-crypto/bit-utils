@@ -1,7 +1,7 @@
 {
   "name": "bi-utils",
   "version": "0.0.01",
-  "description": "bitrue's utils",
+  "description": "Reusable JavaScript utilities",
   "keywords": [
     "billd",
     "utils",

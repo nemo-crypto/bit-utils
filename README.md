@@ -1,79 +1,53 @@
-<h1 align="center">
-  Bi-Utils
-</h1>
+# Bi-Utils · JavaScript / TypeScript 工具库
 
-<p align="center">
-  基于rollup + pnpm + esbuild搭建的Bi-Utils
-</p>
+积累浏览器、DOM、数组、格式化、随机、URL和通用工具，并提供Cache、LRU缓存与队列等数据结构。包名称是 `bi-utils`，目录名称是bit-utils；消费时使用包名。
 
-# 简介
+## 代码与导出
 
-积累常用的 js 方法
+| 入口 | 内容 |
+|---|---|
+| [src/index.ts](src/index.ts) | 命名导出、默认工具集合和version |
+| [src/js/index.ts](src/js/index.ts) | 工具分类汇总 |
+| `src/js/` | array、bom、dom、format、random、reg、url、utils |
+| `src/class/` | Cache、LRUCache、Queue实现 |
+| `scripts/` | 构建、版本与发布脚本 |
+| `test/` | 手工演示脚本与页面，未配置统一测试运行器 |
 
-# 安装
-
-```sh
-npm install bi-utils
-```
-
-# 使用
+包入口声明为 `dist/index.cjs.js`、`dist/index.esm.js` 和 `dist/index.d.ts`，由Rollup构建。发布包的消费示例：
 
 ```ts
-import { isBrowser } from 'bi-utils';
+import { isBrowser, version } from 'bi-utils';
 
-console.log(isBrowser());
+console.log(isBrowser(), version);
 ```
 
-# 本地调试
+浏览器相关函数依赖实际window/document环境，Node场景需按具体实现核对，不能将整个工具集合视为SSR安全。
 
-> 本地调试不会构建 umd
+## 本地准备与已知缺口
 
-```sh
-pnpm run dev
-```
+构建脚本内部调用pnpm，开发依赖包括TypeScript、ts-node、Rollup与TypeDoc。当前没有锁定文件和Node engines约束，环境版本需由实际验证确定。
 
-# 本地构建
+**package.json的postinstall和files都引用了根目录postinstall.js，但该文件当前缺失。** 首次检查可暂时跳过生命周期脚本安装依赖，再审查缺失文件与husky配置；这不代表安装问题已经修复。
 
-```sh
+```bash
+pnpm install --ignore-scripts
 pnpm run build
 ```
 
-# 生成文档
+构建入口的异常处理当前只打印错误，核验时需同时检查终端日志和dist产物，不能仅以退出状态认定构建成功。
 
-> 使用 [typedoc](https://typedoc.org/) 生成，文档会生成在项目根目录的 doc 目录
+## 开发与文档
 
-```sh
+```bash
+pnpm run dev
 pnpm run doc
+pnpm run lint
 ```
 
-# 发版
+TypeDoc输出到doc目录。没有test脚本，`test/test.js` 是手工演示代码，不应作为自动化测试通过依据。新增工具需同步入口导出、类型与实际使用示例。
 
-## 0.确保 git 工作区干净
+## 发版边界
 
-即确保本地的修改已全部提交（git status 的时候会显示：`nothing to commit, working tree clean` ），否则会导致执行 `release:local` 脚本失败
+`release:local` 会修改版本、构建、生成日志、提交并创建tag；`release:online` 会推送并发布npm包。它们属于发布流程，本轮未执行。原始流程记录见 [历史发版说明](docs/original-release-notes.md)，运行前应核对脚本和目标仓库。
 
-## 1.执行本地发版脚本
-
-```sh
-pnpm run release:local
-```
-
-> 该脚本内部会做以下事情：
-
-1. 根据用户选择的版本，更新 package.json 的 version
-2. 开始构建
-3. 对比当前版本与上个版本的差异，生成 changelog日志
-4. 提交暂存区到本地仓库：git commit -m 'chore(release): v 当前版本'
-5. 生成当前版本 tag：git tag v 当前版本
-
-## 2.执行线上发版脚本
-
-```sh
-pnpm run release:online
-```
-
-> 该脚本内部会做以下事情：
-
-1. 提交当前版本：git push
-2. 提交当前版本 tag：git push origin v 当前版本
-3. 发布到 npm
+本轮完成源码、入口和脚本静态检查，未安装依赖、构建产物或核实公共包发布状态。
