@@ -1,53 +1,102 @@
-# Bi-Utils · JavaScript / TypeScript 工具库
+# Bit Utils · TypeScript 工具库架构教学 Demo
 
-积累浏览器、DOM、数组、格式化、随机、URL和通用工具，并提供Cache、LRU缓存与队列等数据结构。包名称是 `bi-utils`，目录名称是bit-utils；消费时使用包名。
+从一个小型工具库学习工程框架搭建：**模块分层 → 公共 API → 环境适配 → 类型约束 → 构建产物 → 自动化测试 → CI**。重点是理解每层的职责，不是收集更多工具函数。
 
-## 代码与导出
+新主线是 `private` 的 ESM 教学项目，包名仍为 `bi-utils`。历史实现已移入 [legacy](legacy/README.md)，不参与构建；这次是教学版重构，不是旧 API 的兼容升级。
 
-| 入口 | 内容 |
-|---|---|
-| [src/index.ts](src/index.ts) | 命名导出、默认工具集合和version |
-| [src/js/index.ts](src/js/index.ts) | 工具分类汇总 |
-| `src/js/` | array、bom、dom、format、random、reg、url、utils |
-| `src/class/` | Cache、LRUCache、Queue实现 |
-| `scripts/` | 构建、版本与发布脚本 |
-| `test/` | 手工演示脚本与页面，未配置统一测试运行器 |
+<!-- BEGIN project-discovery -->
+## 项目定位与实践入口
 
-包入口声明为 `dist/index.cjs.js`、`dist/index.esm.js` 和 `dist/index.d.ts`，由Rollup构建。发布包的消费示例：
+TypeScript utility library architecture tutorial with pure functions, LRU cache, TTL caching and storage adapters. ESM 工具库教学：类型设计、构建、测试与 CI。
+
+适合从以下入口阅读实现与接入条件：
+
+- [LRU 缓存与集合](src/collections/)
+- [环境适配](src/adapters/)
+- [架构设计](docs/architecture.md)
+<!-- END project-discovery -->
+
+## 五分钟运行
+
+使用 Node.js 24（最低 22）与 npm；版本记录在 `.nvmrc` 和 `package.json`。
+
+```sh
+nvm use                    # 未安装 nvm 时自行使用 Node 24
+npm ci                     # 按 package-lock.json 安装唯一开发依赖 TypeScript
+npm run check              # 类型检查、构建、运行自动化测试
+npm run demo               # 运行完整命令行示例
+```
+
+Demo 会输出纯函数分组、LRU 淘汰结果，以及缓存从有效到到期的变化。示例使用注入时钟，不等待真实时间，不需要浏览器、后端或密钥。
+
+## 目录与阅读顺序
+
+```text
+bit-utils/
+├── src/
+│   ├── core/              # clamp / chunk：纯函数与边界条件
+│   ├── collections/       # LRUCache：泛型、封装与状态
+│   ├── ports/             # StoragePort：最小能力契约
+│   ├── services/          # CacheService：TTL、校验、序列化规则
+│   ├── adapters/          # MemoryStorage / 浏览器存储适配
+│   ├── index.ts           # 主入口，不依赖浏览器全局
+│   └── browser.ts         # 浏览器适配子入口
+├── examples/              # 消费实际构建产物的示例
+├── tests/                 # 使用 node:test 验证公开行为
+├── scripts/               # 仅清理生成目录
+├── docs/                  # 架构、课程与迁移说明
+├── legacy/                # 历史源码对照，不参与主线
+└── .github/workflows/     # 与本地同命令的 CI
+```
+
+建议先阅读 [架构设计](docs/architecture.md)，再按 [课程路线](docs/learning-path.md) 实操；旧使用方查看 [迁移说明](docs/migration.md)。
+
+## 核心示例
 
 ```ts
-import { isBrowser, version } from 'bi-utils';
+import { CacheService, MemoryStorage } from 'bi-utils';
 
-console.log(isBrowser(), version);
+const cache = new CacheService<string>({
+  storage: new MemoryStorage(),
+  isValue: (value): value is string => typeof value === 'string',
+});
+
+cache.set('lesson', '依赖倒置', 5_000); // 毫秒
+console.log(cache.get('lesson'));      // string | null
 ```
 
-浏览器相关函数依赖实际window/document环境，Node场景需按具体实现核对，不能将整个工具集合视为SSR安全。
+缓存服务只依赖 `StoragePort`，不直接访问 localStorage。浏览器应用中可以显式注入：
 
-## 本地准备与已知缺口
+```ts
+import { CacheService } from 'bi-utils';
+import { createBrowserStorage } from 'bi-utils/browser';
 
-构建脚本内部调用pnpm，开发依赖包括TypeScript、ts-node、Rollup与TypeDoc。当前没有锁定文件和Node engines约束，环境版本需由实际验证确定。
-
-**package.json的postinstall和files都引用了根目录postinstall.js，但该文件当前缺失。** 首次检查可暂时跳过生命周期脚本安装依赖，再审查缺失文件与husky配置；这不代表安装问题已经修复。
-
-```bash
-pnpm install --ignore-scripts
-pnpm run build
+const cache = new CacheService<string>({
+  storage: createBrowserStorage(window.localStorage),
+  isValue: (value): value is string => typeof value === 'string',
+});
 ```
 
-构建入口的异常处理当前只打印错误，核验时需同时检查终端日志和dist产物，不能仅以退出状态认定构建成功。
+访问 `window.localStorage` 应放在浏览器生命周期内；浏览器禁用存储、配额不足等异常会向调用方传播。上面的包名导入用于本仓库自引用或接入构建器的应用，不能直接复制到未配置 import map 的裸 HTML 页面中。
 
-## 开发与文档
+## 命令
 
-```bash
-pnpm run dev
-pnpm run doc
-pnpm run lint
-```
+| 命令 | 用途 |
+| --- | --- |
+| `npm run typecheck` | 严格检查源码，不生成文件 |
+| `npm run build` | 清理 dist，输出 ESM、声明文件与 source map |
+| `npm run dev` | TypeScript watch，持续编译；不是 Web 服务 |
+| `npm test` | 重新构建并运行公开 API 测试 |
+| `npm run check` | 类型检查 + 构建 + 测试 |
+| `npm run demo` | 构建并运行教学示例 |
+| `npm run clean` | 只清理当前项目的 dist |
 
-TypeDoc输出到doc目录。没有test脚本，`test/test.js` 是手工演示代码，不应作为自动化测试通过依据。新增工具需同步入口导出、类型与实际使用示例。
+构建失败会返回非零退出码，没有安装后钩子、自动提交、推送或发布命令。CI 执行 `npm ci`、`npm run check` 和 `npm run demo`。
 
-## 发版边界
+## 学习边界
 
-`release:local` 会修改版本、构建、生成日志、提交并创建tag；`release:online` 会推送并发布npm包。它们属于发布流程，本轮未执行。原始流程记录见 [历史发版说明](docs/original-release-notes.md)，运行前应核对脚本和目标仓库。
+仅保留一项开发依赖 TypeScript，运行时代码无第三方依赖；测试使用 Node 内置测试器。暂不引入 Monorepo、DI 容器、打包器、自动发版或 UI 框架，避免基础课程被工具配置淹没。
 
-本轮完成源码、入口和脚本静态检查，未安装依赖、构建产物或核实公共包发布状态。
+本项目输出现代 ESM，不提供旧 UMD、CommonJS 及 polyfill。LRU 的 `get` 会更新访问顺序，`has` 不会；缺失返回 undefined，可用 `has` 区分已存储的 undefined。缓存按访问时清理过期值，没有后台清扫或容量控制；它不是生产级分布式缓存。
+
+缓存值必须能 JSON 序列化并通过运行时校验。Date、Map、循环引用及会被 JSON 丢弃的属性需要额外设计编解码；TypeScript 类型参数不能保证外部 JSON 数据安全。

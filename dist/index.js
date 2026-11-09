@@ -1,1 +1,7 @@
-import{version as a}from"./package.json.js";import*as s from"./js/index.js";import{arrayUnique as r}from"./js/array.js";import{isIPad as o}from"./js/bom.js";import{copyToClipBoard as e}from"./js/dom.js";import{formatDate as m}from"./js/format.js";import{getRandomInt as t,getRandomOne as i,getRandomString as n,getRangeRandom as j}from"./js/random.js";import{isPureNumber as g,judgeStringSpace as p,regVerify as d}from"./js/reg.js";import{getUrlParams as c}from"./js/url.js";import{strBtoa as f}from"./js/utils.js";import{CacheModel as l}from"./class/cache.js";import{LRUCache as u}from"./class/lru-cache.js";import{ConcurrentPoll as R}from"./class/queue.js";const C=a;export{l as CacheModel,R as ConcurrentPoll,u as LRUCache,r as arrayUnique,e as copyToClipBoard,s as default,m as formatDate,t as getRandomInt,i as getRandomOne,n as getRandomString,j as getRangeRandom,c as getUrlParams,o as isIPad,g as isPureNumber,p as judgeStringSpace,d as regVerify,f as strBtoa,C as version};
+// 公共 API：消费者从包入口导入，不依赖内部文件布局。
+export { clamp } from './core/clamp.js';
+export { chunk } from './core/chunk.js';
+export { LRUCache } from './collections/lru-cache.js';
+export { CacheService } from './services/cache-service.js';
+export { MemoryStorage } from './adapters/memory-storage.js';
+//# sourceMappingURL=index.js.map

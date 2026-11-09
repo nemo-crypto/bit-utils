@@ -1,8 +1,8 @@
-import { version as __VERSION__ } from '../package.json';
-import * as utils from './js/index';
-
-export * from './js/index';
-
-export const version = __VERSION__;
-
-export default utils;
+// 公共 API：消费者从包入口导入，不依赖内部文件布局。
+export { clamp } from './core/clamp.js';
+export { chunk } from './core/chunk.js';
+export { LRUCache } from './collections/lru-cache.js';
+export { CacheService } from './services/cache-service.js';
+export { MemoryStorage } from './adapters/memory-storage.js';
+export type { StoragePort } from './ports/storage.js';
+export type { CacheOptions } from './services/cache-service.js';
