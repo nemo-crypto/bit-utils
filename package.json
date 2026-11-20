@@ -30,7 +30,7 @@
     "dev": "tsc --watch",
     "test": "npm run build && tsc -p tests/tsconfig.json && node --test tests/*.test.mjs",
     "demo": "npm run build && node examples/demo.mjs",
-    "check": "npm run typecheck && npm test"
+    "check": "npm test"
   },
   "devDependencies": {
     "typescript": "5.9.3"

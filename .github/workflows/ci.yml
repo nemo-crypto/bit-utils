@@ -13,4 +13,4 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run check
-      - run: npm run demo
+      - run: node examples/demo.mjs
