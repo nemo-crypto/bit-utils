@@ -30,7 +30,9 @@ export class CacheService<T> {
     const encoded = JSON.stringify({ version: 1, expiresAt, value });
     // JSON 会丢弃 undefined、将 NaN 转为 null；验证实际存储的数据。
     const decoded: unknown = JSON.parse(encoded);
-    if (!this.isEnvelope(decoded)) throw new TypeError('缓存值无法按契约序列化');
+    if (!this.isEnvelope(decoded) || !this.isValue(decoded.value)) {
+      throw new TypeError('缓存值无法按契约序列化');
+    }
     this.storage.setItem(this.prefix + key, encoded);
   }
 
@@ -50,7 +52,7 @@ export class CacheService<T> {
     }
     const now = this.now();
     if (!Number.isFinite(now)) throw new RangeError('时钟必须返回有限毫秒数');
-    if (now >= envelope.expiresAt) {
+    if (now >= envelope.expiresAt || !this.isValue(envelope.value)) {
       this.remove(key);
       return null;
     }
@@ -61,11 +63,11 @@ export class CacheService<T> {
     this.storage.removeItem(this.prefix + key);
   }
 
-  private isEnvelope(value: unknown): value is { version: 1; expiresAt: number; value: T } {
+  private isEnvelope(value: unknown): value is { version: 1; expiresAt: number; value: unknown } {
     return typeof value === 'object' && value !== null
       && 'version' in value && value.version === 1
       && 'expiresAt' in value && typeof value.expiresAt === 'number'
       && Number.isFinite(value.expiresAt)
-      && 'value' in value && this.isValue(value.value);
+      && 'value' in value;
   }
 }
