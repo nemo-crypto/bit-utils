@@ -1,15 +1,28 @@
 name: Teaching demo checks
-on: [push, pull_request]
+on:
+  push:
+    branches: [main]
+  pull_request:
 permissions:
   contents: read
 jobs:
   check:
+    name: ${{ matrix.name }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: check
+            node_version_file: .nvmrc
+          - name: check (Node.js 22)
+            node_version: '22'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-node@v7.1.0
         with:
-          node-version-file: .nvmrc
+          node-version: ${{ matrix.node_version }}
+          node-version-file: ${{ matrix.node_version_file }}
           cache: npm
       - run: npm ci
       - run: npm run check
