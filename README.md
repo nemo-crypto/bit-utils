@@ -93,7 +93,7 @@ const cache = new CacheService<string>({
 | `npm run demo` | 构建并运行教学示例 |
 | `npm run clean` | 只清理当前项目的 dist |
 
-构建失败会返回非零退出码，没有安装后钩子、自动提交、推送或发布命令。CI 执行 `npm ci` 和 `npm run check`，再用 `node examples/demo.mjs` 运行示例，复用已验证的 `dist/`。
+构建失败会返回非零退出码，没有安装后钩子、自动提交、推送或发布命令。PR 和推送到 `main` 的提交会触发 CI。CI 执行 `npm ci` 和 `npm run check`，再用 `node examples/demo.mjs` 运行示例，复用已验证的 `dist/`。
 
 ## 学习边界
 
