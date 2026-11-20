@@ -1,6 +1,14 @@
 # 从零搭建：六节实践课
 
-每节都按“阅读 → 修改 → 验证”的顺序学习。完整通关命令为 `npm run check && npm run demo`。
+每节都按“阅读 → 修改 → 验证”的顺序学习。在仓库根目录使用 README 指定的 Node.js 版本，按以下顺序运行与 CI 相同的检查。
+
+```sh
+npm ci
+npm run check
+node examples/demo.mjs
+```
+
+最后一步使用 `npm run check` 生成的 `dist/`，整套流程只需构建一次。
 
 ## 1. 建立工程与公共入口
 
@@ -36,7 +44,7 @@
 
 阅读 examples/demo.mjs 和 tests/exports.test.mjs。它们从包名导入构建结果，不绕过入口直接加载 src。
 
-执行 `npm run demo`，解释每行输出。再阅读 CI 文件，确认 CI 的测试和示例使用同一份构建产物。扩展练习是引入一个小型真实消费应用，而不是立刻增加发版、容器或多包架构。
+如果刚运行过 `npm run check`，执行 `node examples/demo.mjs` 并解释每行输出。单独运行示例时，可以用 `npm run demo` 在执行前自动构建。再阅读 CI 文件，确认 CI 的测试和示例使用同一份构建产物。扩展练习是引入一个小型真实消费应用，而不是立刻增加发版、容器或多包架构。
 
 ## 验收标准
 
