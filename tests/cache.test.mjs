@@ -19,6 +19,28 @@ test('TTL 使用注入时钟，在到期时刻清除数据', () => {
   assert.equal(cache.get('immediate'), null);
 });
 
+test('过期数据直接清除，未过期数据仍校验值类型', () => {
+  const storage = new MemoryStorage();
+  let validations = 0;
+  const cache = new CacheService({
+    storage,
+    isValue(value) {
+      validations += 1;
+      return isString(value);
+    },
+    now: () => 100,
+  });
+  storage.setItem('demo:expired', '{"version":1,"expiresAt":100,"value":"旧数据"}');
+  storage.setItem('demo:fresh', '{"version":1,"expiresAt":101,"value":"新数据"}');
+
+  assert.equal(cache.get('expired'), null);
+  assert.equal(storage.getItem('demo:expired'), null);
+  assert.equal(validations, 0);
+
+  assert.equal(cache.get('fresh'), '新数据');
+  assert.equal(validations, 1);
+});
+
 test('损坏 JSON、错误版本或值类型被清除', () => {
   const storage = new MemoryStorage();
   const cache = new CacheService({ storage, isValue: isString, now: () => 0 });
