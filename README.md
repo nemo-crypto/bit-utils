@@ -18,13 +18,15 @@ TypeScript utility library architecture tutorial with pure functions, LRU cache,
 
 ## 五分钟运行
 
-使用 Node.js 24（最低 22）与 npm；版本记录在 `.nvmrc` 和 `package.json`。
+本地开发和 CI 测试使用 `.nvmrc` 指定的 Node.js 24。`package.json` 中的 `engines.node` 声明项目最低支持 Node.js 22。GitHub Actions 的 `checkout` 和 `setup-node` 也使用 Node.js 24 来运行 Action 自身。项目的 npm 命令用哪个版本，由 `setup-node` 读取 `.nvmrc` 后设置。
+
+在仓库根目录运行以下命令，即可复现 CI 的安装、检查和示例步骤。
 
 ```sh
-nvm use                    # 未安装 nvm 时自行使用 Node 24
-npm ci                     # 按 package-lock.json 安装唯一开发依赖 TypeScript
-npm run check              # 类型检查、构建、运行自动化测试
-npm run demo               # 运行完整命令行示例
+nvm use                    # 未安装 nvm 时自行使用 Node.js 24
+npm ci                     # 按 package-lock.json 安装依赖
+npm run check              # 构建、检查公开类型声明并运行测试
+node examples/demo.mjs     # 复用上一步生成并验证的 dist/
 ```
 
 Demo 会输出纯函数分组、LRU 淘汰结果，以及缓存从有效到到期的变化。示例使用注入时钟，不等待真实时间，不需要浏览器、后端或密钥。
