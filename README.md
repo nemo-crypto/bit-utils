@@ -18,7 +18,7 @@ TypeScript utility library architecture tutorial with pure functions, LRU cache,
 
 ## 五分钟运行
 
-本地开发和 CI 测试使用 `.nvmrc` 指定的 Node.js 24。`package.json` 中的 `engines.node` 声明项目最低支持 Node.js 22。GitHub Actions 的 `checkout` 和 `setup-node` 也使用 Node.js 24 来运行 Action 自身。项目的 npm 命令用哪个版本，由 `setup-node` 读取 `.nvmrc` 后设置。
+本地开发和 CI 默认任务使用 `.nvmrc` 指定的 Node.js 24。CI 也用 Node.js 22 跑一遍相同的检查和示例，验证 `package.json` 中声明支持的最低主版本。`checkout` 和 `setup-node` 自身运行于 Node.js 24，项目的 npm 命令使用各 CI 任务选定的 Node.js 版本。
 
 在仓库根目录运行以下命令，即可复现 CI 的安装、检查和示例步骤。
 
