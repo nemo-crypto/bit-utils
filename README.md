@@ -86,12 +86,12 @@ const cache = new CacheService<string>({
 | `npm run typecheck` | 严格检查源码，不生成文件 |
 | `npm run build` | 清理 dist，输出 ESM、声明文件与 source map |
 | `npm run dev` | TypeScript watch，持续编译；不是 Web 服务 |
-| `npm test` | 重新构建并运行公开 API 测试 |
-| `npm run check` | 类型检查 + 构建 + 测试 |
+| `npm test` | 构建、检查公开类型声明并运行公开 API 测试 |
+| `npm run check` | 执行与 `npm test` 相同的完整检查 |
 | `npm run demo` | 构建并运行教学示例 |
 | `npm run clean` | 只清理当前项目的 dist |
 
-构建失败会返回非零退出码，没有安装后钩子、自动提交、推送或发布命令。CI 执行 `npm ci`、`npm run check` 和 `npm run demo`。
+构建失败会返回非零退出码，没有安装后钩子、自动提交、推送或发布命令。CI 执行 `npm ci` 和 `npm run check`，再用 `node examples/demo.mjs` 运行示例，复用已验证的 `dist/`。
 
 ## 学习边界
 
